@@ -5,7 +5,7 @@ datapath="data/chong_data_hddm_ready.csv"
 
 
 #for model in "ddm_par2_no_bias" "ddm_par2_angle_no_bias" "ddm_seq2_no_bias" "ddm_seq2_angle_no_bias" "ddm_mic2_adj_no_bias" "ddm_mic2_adj_angle_no_bias" "ddm_par2_weibull_no_bias" "ddm_seq2_weibull_no_bias" "ddm_mic2_adj_weibull_no_bias"
-for model in "ddm_mic2_adj_angle_no_bias" "ddm_mic2_adj_weibull_no_bias" "ddm_mic2_adj_no_bias"
+for model in "ddm_mic2_adj_angle_no_bias" #"ddm_mic2_adj_weibull_no_bias" "ddm_mic2_adj_no_bias"
 do
 	for dep_on_task in 0 1
 	do
