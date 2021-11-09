@@ -53,7 +53,7 @@ if __name__ == '__main__':
     hddm_model_ = hddm.HDDMnn(chong_data,
                                 model = args.model,
                                 informative = False,
-                                include = hddm.simulators.model_config[model]['hddm_include'],
+                                include = hddm.simulators.model_config[args.model]['hddm_include'],
                                 is_group_model = args.is_group_model,
                                 depends_on = depends_on,
                                 p_outlier = 0.05,
