@@ -4,17 +4,20 @@ import argparse
 if __name__ == '__main__':
     CLI = argparse.ArgumentParser()
     CLI.add_argument("--data_path",
-                    type = str)
+                    type = str,
+                    default = "data/chong_data_hddm_ready.csv")
     CLI.add_argument("--model",
                     type = str,
                     default = 'ddm_par2_no_bias')
     CLI.add_argument("--dep_on_task",
-                    type = int)
+                    type = int,
+                    default = 0)
     CLI.add_argument("--dep_on_coh",
-                    type = int)
+                    type = int,
+                    default = 0)
     CLI.add_argument("--is_group_model",
                     type = int,
-                    default = True)
+                    default = 0)
     CLI.add_argument("--nmcmc",
                      type = int,
                      default = 4000)
@@ -23,7 +26,7 @@ if __name__ == '__main__':
                     default = 1000)
     CLI.add_argument("--out_folder",
                     type = str,
-                    default = "/users/afengler/data/project_hierarchical_decision_making/hierarchical_decision_making/")
+                    default = "data/hddm_models/")
     
     # Process supplied arguments
     args = CLI.parse_args()
@@ -37,16 +40,19 @@ if __name__ == '__main__':
     # Specify model depends_on arguments, as per supplied arguments ----
     depends_on = {'vh': [],'vl1': [],'vl2': []}
 
+    # Should drifts depend on task?
     if args.dep_on_task:
         depends_on['vh'].append('highDim')
         depends_on['vl1'].append('irrDim')
         depends_on['vl2'].append('lowDim')
     
+    # Should drifts depend on coherence levels?
     if args.dep_on_coh:
             depends_on['vh'].append('highDimCoh')
             depends_on['vl1'].append('irrDimCoh')
             depends_on['vl2'].append('lowDimCoh')
     
+    # In case no dependencies specified --> set to None
     if len(depends_on['vh'])==0:
         depends_on = None
     # --------------------------------------------------------------------
@@ -54,27 +60,28 @@ if __name__ == '__main__':
     # Specify HDDM model
     #depends_on = {'vh': ['highDimCoh','highDim'], 'vl1': ['irrDimCoh','irrDim'], 'vl2': ['lowDimCoh','lowDim']}
     hddm_model_ = hddm.HDDMnn(chong_data,
-                                model = args.model,
-                                informative = False,
-                                include = hddm.simulators.model_config[args.model]['hddm_include'],
-                                is_group_model = bool(args.is_group_model),
-                                depends_on = depends_on,
-                                p_outlier = 0.05,
-                                network_type='torch_mlp')
+                              model = args.model,
+                              informative = False,
+                              include = hddm.simulators.model_config[args.model]['hddm_include'],
+                              is_group_model = bool(args.is_group_model),
+                              depends_on = depends_on,
+                              p_outlier = 0.05,
+                              network_type='torch_mlp')
 
     # Sample from model              
     hddm_model_.sample(args.nmcmc, 
-                              burn = args.nburn, 
-                              dbname='data/hddm_models/{}_chong_task_{}_coh_{}_group_{}.db'.format(str(args.model),
-                                                                                                str(args.dep_on_task),
-                                                                                                str(args.dep_on_coh), 
-                                                                                                str(args.is_group_model)),
-                              db = 'pickle')
+                       burn = args.nburn, 
+                       dbname = args.out_folder + '{}_chong_task_{}_coh_{}_group_{}.db'.format(str(args.model),
+                                                                                               str(args.dep_on_task),
+                                                                                               str(args.dep_on_coh), 
+                                                                                               str(args.is_group_model)),
+                       db = 'pickle')
 
+    print('FINISHED SAMPLING')
     # Store model
-    hddm_model_.save('data/hddm_models/{}_chong_task_{}_coh_{}_group_{}.pickle'.format(str(args.model),
-                                                                                     str(args.dep_on_task),
-                                                                                     str(args.dep_on_coh),
-                                                                                     str(args.is_group_model)))
+    hddm_model_.save(args.out_folder + '{}_chong_task_{}_coh_{}_group_{}.pickle'.format(str(args.model),
+                                                                                        str(args.dep_on_task),
+                                                                                        str(args.dep_on_coh),
+                                                                                        str(args.is_group_model)))
 
     print('FINISHED FITTING HDDM MODEL')
