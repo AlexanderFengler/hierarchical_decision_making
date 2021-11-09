@@ -34,7 +34,7 @@ if __name__ == '__main__':
     # Specify model depends_on arguments, as per supplied arguments ----
     depends_on = {'vh': [],'vl1': [],'vl2': []}
 
-    if args.sep_on_task:
+    if args.dep_on_task:
         depends_on['vh'].append('highDim')
         depends_on['vl1'].append('irrDim')
         depends_on['vl2'].append('lowDim')
