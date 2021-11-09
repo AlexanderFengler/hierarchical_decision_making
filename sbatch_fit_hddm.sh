@@ -32,7 +32,7 @@ conda deactivate
 conda deactivate
 conda activate hddm-gpu
 
-cd /users/afengler/data/proj_hierarchical_decision_making/hierarchican_decision_making/
+cd /users/afengler/data/proj_hierarchical_decision_making/hierarchical_decision_making/
 # ----------------------------------------------------------------------------
 
 # PROCESS ARGUMENTS ----------------------------------------------------------
