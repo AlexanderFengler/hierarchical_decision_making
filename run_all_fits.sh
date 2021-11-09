@@ -1,7 +1,7 @@
 counter=0
 nmcmc=4000
 nburn=1000
-datapath="data/chong_data_hddm_ready.csv"
+data_path="data/chong_data_hddm_ready.csv"
 
 
 #for model in "ddm_par2_no_bias" "ddm_par2_angle_no_bias" "ddm_seq2_no_bias" "ddm_seq2_angle_no_bias" "ddm_mic2_adj_no_bias" "ddm_mic2_adj_angle_no_bias" "ddm_par2_weibull_no_bias" "ddm_seq2_weibull_no_bias" "ddm_mic2_adj_weibull_no_bias"
@@ -20,7 +20,7 @@ do
                                           --dep_on_task $dep_on_task \
                                           --dep_on_coh $dep_on_coh \
                                           --nmcmc $nmcmc \
-                                          --nburn $nburn
+                                          --nburn $nburn \
 			done
 		done
 	done
