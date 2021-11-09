@@ -68,10 +68,10 @@ while [ ! $# -eq 0 ]
 # ----------------------------------------------------------------------------
 
 # RUN SCRIPT -----------------------------------------------------------------
-python -u fit_hddm.py --data_path $data_path \
-                      --model $model \
-                      --dep_on_task $dep_on_task \
-                      --dep_on_coh $dep_on_coh \
-                      --nmcmc $nmcmc \
-                      --nburn $nburn
+# python -u fit_hddm.py --data_path $data_path \
+#                       --model $model \
+#                       --dep_on_task $dep_on_task \
+#                       --dep_on_coh $dep_on_coh \
+#                       --nmcmc $nmcmc \
+#                       --nburn $nburn
 #-----------------------------------------------------------------------------
