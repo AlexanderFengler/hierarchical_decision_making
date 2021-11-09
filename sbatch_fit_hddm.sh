@@ -47,17 +47,19 @@ while [ ! $# -eq 0 ]
                 echo "model: $2"
                 model=$2
                 ;;
-            --dep_on_task | -dept)
+            --dep_on_task | -d)
                 echo "passing dependence on task as $2"
                 dep_on_task=$2
                 ;;
-            --dep_on_coh | -depc)
+            --dep_on_coh | -d)
                 echo "passing dependence on coherence as $2"
                 dep_on_coh=$2
-            --nmcmc | -nm)
+                ;;
+            --nmcmc | -n)
                 echo "nmcmc set to: $2"
                 nmcmc=$2
-            --nburn | -nb)
+                ;;
+            --nburn | -n)
                 echo "nburn set to: $2"
                 nburn=$2
         esac
