@@ -13,7 +13,7 @@ if __name__ == '__main__':
     CLI.add_argument("--dep_on_coh",
                     type = int)
     CLI.add_argument("--is_group_model",
-                    type = bool,
+                    type = int,
                     default = True)
     CLI.add_argument("--nmcmc",
                      type = int,
@@ -21,6 +21,9 @@ if __name__ == '__main__':
     CLI.add_argument("--nburn",
                     type = int,
                     default = 1000)
+    CLI.add_argument("--out_folder",
+                    type = str,
+                    default = "/users/afengler/data/project_hierarchical_decision_making/hierarchical_decision_making/")
     
     # Process supplied arguments
     args = CLI.parse_args()
@@ -54,7 +57,7 @@ if __name__ == '__main__':
                                 model = args.model,
                                 informative = False,
                                 include = hddm.simulators.model_config[args.model]['hddm_include'],
-                                is_group_model = args.is_group_model,
+                                is_group_model = bool(args.is_group_model),
                                 depends_on = depends_on,
                                 p_outlier = 0.05,
                                 network_type='torch_mlp')
