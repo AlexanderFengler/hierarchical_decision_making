@@ -15,12 +15,12 @@ do
 			do
 				let counter=counter+1
                 echo $counter
-                sbatch sbatch_fit_hddm_new.sh --data_path $data_path \
-                                              --model $model \
-                                              --dep_on_task $dep_on_task \
-                                              --dep_on_coh $dep_on_coh \
-                                              --nmcmc $nmcmc \
-                                              --nburn $nburn
+                sbatch sbatch_fit_hddm.sh --data_path $data_path \
+                                          --model $model \
+                                          --dep_on_task $dep_on_task \
+                                          --dep_on_coh $dep_on_coh \
+                                          --nmcmc $nmcmc \
+                                          --nburn $nburn
 			done
 		done
 	done
