@@ -25,6 +25,9 @@ if __name__ == '__main__':
     # Process supplied arguments
     args = CLI.parse_args()
 
+    print('Loaded argument: ')
+    print(args)
+
     # Read in data
     chong_data = hddm.load_csv(args.data_path)
 
@@ -70,3 +73,5 @@ if __name__ == '__main__':
                                                                                      str(args.dep_on_task),
                                                                                      str(args.dep_on_coh),
                                                                                      str(args.is_group_model)))
+
+    print('FINISHED FITTING HDDM MODEL')

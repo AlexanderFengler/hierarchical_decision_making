@@ -36,6 +36,8 @@ cd /users/afengler/data/proj_hierarchical_decision_making/hierarchical_decision_
 # ----------------------------------------------------------------------------
 
 # PROCESS ARGUMENTS ----------------------------------------------------------
+echo $#
+
 while [ ! $# -eq 0 ]
     do
         case "$1" in
