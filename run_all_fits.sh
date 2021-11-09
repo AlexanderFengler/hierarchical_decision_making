@@ -20,7 +20,7 @@ do
                                           --dep_on_task $dep_on_task \
                                           --dep_on_coh $dep_on_coh \
                                           --nmcmc $nmcmc \
-                                          --nburn $nburn \
+                                          --nburn $nburn 
 			done
 		done
 	done
