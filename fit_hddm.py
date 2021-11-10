@@ -76,12 +76,11 @@ if __name__ == '__main__':
                                                                                                str(args.dep_on_coh), 
                                                                                                str(args.is_group_model)),
                        db = 'pickle')
-
-    print('FINISHED SAMPLING')
+    print("\n FINISHED SAMPLING")
+    
     # Store model
     hddm_model_.save(args.out_folder + '{}_chong_task_{}_coh_{}_group_{}.pickle'.format(str(args.model),
                                                                                         str(args.dep_on_task),
                                                                                         str(args.dep_on_coh),
                                                                                         str(args.is_group_model)))
-
-    print('FINISHED FITTING HDDM MODEL')
+    print("\n FINISHED FITTING HDDM MODEL")
