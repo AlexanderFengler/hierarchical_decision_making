@@ -64,6 +64,9 @@ while [ ! $# -eq 0 ]
             --nburn | -n)
                 echo "nburn set to: $2"
                 nburn=$2
+            --nchains | -nc)
+                echo "nchains set to: $2"
+                nchains=$2
         esac
         shift 2
     done
@@ -75,5 +78,6 @@ python -u fit_hddm.py --data_path $data_path \
                       --dep_on_task $dep_on_task \
                       --dep_on_coh $dep_on_coh \
                       --nmcmc $nmcmc \
-                      --nburn $nburn
+                      --nburn $nburn \
+                      --nchains $nchains
 #-----------------------------------------------------------------------------

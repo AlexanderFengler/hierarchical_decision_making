@@ -24,6 +24,9 @@ if __name__ == '__main__':
     CLI.add_argument("--nburn",
                     type = int,
                     default = 1000)
+    CLI.add_argument("--nchains",
+                    type = int,
+                    default = 2)
     CLI.add_argument("--out_folder",
                     type = str,
                     default = "data/hddm_models/")
@@ -57,30 +60,38 @@ if __name__ == '__main__':
         depends_on = None
     # --------------------------------------------------------------------
 
-    # Specify HDDM model
-    #depends_on = {'vh': ['highDimCoh','highDim'], 'vl1': ['irrDimCoh','irrDim'], 'vl2': ['lowDimCoh','lowDim']}
-    hddm_model_ = hddm.HDDMnn(chong_data,
-                              model = args.model,
-                              informative = False,
-                              include = hddm.simulators.model_config[args.model]['hddm_include'],
-                              is_group_model = bool(args.is_group_model),
-                              depends_on = depends_on,
-                              p_outlier = 0.05,
-                              network_type='torch_mlp')
+    # Main loop across chains
+    for chain in range(args.nchains):
+        # Specify HDDM model
+        #depends_on = {'vh': ['highDimCoh','highDim'], 'vl1': ['irrDimCoh','irrDim'], 'vl2': ['lowDimCoh','lowDim']}
+        hddm_model_ = hddm.HDDMnn(chong_data,
+                                  model = args.model,
+                                  informative = False,
+                                  include = hddm.simulators.model_config[args.model]['hddm_include'],
+                                  is_group_model = bool(args.is_group_model),
+                                  depends_on = depends_on,
+                                  p_outlier = 0.05,
+                                  network_type='torch_mlp')
 
-    # Sample from model              
-    hddm_model_.sample(args.nmcmc, 
-                       burn = args.nburn, 
-                       dbname = args.out_folder + '{}_chong_task_{}_coh_{}_group_{}.db'.format(str(args.model),
-                                                                                               str(args.dep_on_task),
-                                                                                               str(args.dep_on_coh), 
-                                                                                               str(args.is_group_model)),
-                       db = 'pickle')
-    print("\n FINISHED SAMPLING")
-    
-    # Store model
-    hddm_model_.save(args.out_folder + '{}_chong_task_{}_coh_{}_group_{}.pickle'.format(str(args.model),
-                                                                                        str(args.dep_on_task),
-                                                                                        str(args.dep_on_coh),
-                                                                                        str(args.is_group_model)))
-    print("\n FINISHED FITTING HDDM MODEL")
+        # Sample from model              
+        hddm_model_.sample(args.nmcmc, 
+                           burn = args.nburn, 
+                           dbname = args.out_folder + \
+                                    '{}_chong_task_{}_coh_{}_group_{}_chain_{}.db'.format(str(args.model),
+                                                                                          str(args.dep_on_task),
+                                                                                          str(args.dep_on_coh), 
+                                                                                          str(args.is_group_model),
+                                                                                          str(chain)),
+                           db = 'pickle')
+        print("\n FINISHED SAMPLING CHAIN " + str(chain))
+        
+        # Store model
+        hddm_model_.save(args.out_folder + \
+                        '{}_chong_task_{}_coh_{}_group_{}_chain_{}.pickle'.format(str(args.model),
+                                                                                  str(args.dep_on_task),
+                                                                                  str(args.dep_on_coh),
+                                                                                  str(args.is_group_model),
+                                                                                  str(chain)))
+        print("\n FINISHED FITTING HDDM MODEL CHAIN " + str(chain))
+
+    print("\n FINISHED ALL CHAINS")
