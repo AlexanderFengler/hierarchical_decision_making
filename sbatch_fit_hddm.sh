@@ -64,6 +64,7 @@ while [ ! $# -eq 0 ]
             --nburn | -n)
                 echo "nburn set to: $2"
                 nburn=$2
+                ;;
             --nchains | -nc)
                 echo "nchains set to: $2"
                 nchains=$2
