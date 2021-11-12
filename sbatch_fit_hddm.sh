@@ -57,6 +57,10 @@ while [ ! $# -eq 0 ]
                 echo "passing dependence on coherence as $2"
                 dep_on_coh=$2
                 ;;
+            --is_group_model | -i)
+                echo "group model is set to: $2"
+                is_group_model=$2
+                ;;
             --nmcmc | -n)
                 echo "nmcmc set to: $2"
                 nmcmc=$2
@@ -78,6 +82,7 @@ python -u fit_hddm.py --data_path $data_path \
                       --model $model \
                       --dep_on_task $dep_on_task \
                       --dep_on_coh $dep_on_coh \
+                      --is_group_model $is_group_model \
                       --nmcmc $nmcmc \
                       --nburn $nburn \
                       --nchains $nchains

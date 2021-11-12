@@ -11,7 +11,7 @@ do
 	do
 		for dep_on_coh in 0 1
 		do
-			for is_group in 0 1
+			for is_group_model in 0 1
 			do
 				let counter=counter+1
                 echo $counter
@@ -19,6 +19,7 @@ do
                                           --model $model \
                                           --dep_on_task $dep_on_task \
                                           --dep_on_coh $dep_on_coh \
+										  --is_group_model $is_group_model \
                                           --nmcmc $nmcmc \
                                           --nburn $nburn \
 										  --nchains $nchains
