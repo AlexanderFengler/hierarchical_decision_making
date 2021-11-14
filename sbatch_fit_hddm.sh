@@ -91,7 +91,7 @@ while [ ! $# -eq 0 ]
 # RUN SCRIPT -----------------------------------------------------------------
 
 
-if [ param_recov_mode == "False" ]
+if [ $param_recov_mode == "False" ]
     then
         echo "Running chong data analysis"
         python -u fit_hddm.py --data_path $data_path \
@@ -102,7 +102,7 @@ if [ param_recov_mode == "False" ]
                               --nmcmc $nmcmc \
                               --nburn $nburn \
                               --nchains $nchains
-elif [ param_recov_mode == "single_subject" ]
+elif [ $param_recov_mode == "single_subject" ]
     then
         echo "Running parameter recovery in single subject mode"
         for ((i=1; i<=$n_param_sets_by_recovery; i++))
@@ -113,7 +113,7 @@ elif [ param_recov_mode == "single_subject" ]
                                                           --nburn $nburn \
                                                           --nchains $nchains
         done
-elif [ param_recov_mode == "chong" ]
+elif [ $param_recov_mode == "chong" ]
     then
         echo "Running parameter recovery in chong mode"
         for ((i=1; i<=$n_param_sets_by_recovery; i++))
