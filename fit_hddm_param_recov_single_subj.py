@@ -2,6 +2,7 @@ import hddm
 import argparse
 import uuid
 import pickle
+import os
 
 if __name__ == '__main__':
     CLI = argparse.ArgumentParser()
@@ -22,7 +23,7 @@ if __name__ == '__main__':
                     default = 2)
     CLI.add_argument("--out_folder",
                     type = str,
-                    default = "data_param_recov/")
+                    default = "data_param_recov/single_subj/")
     
     # Process supplied arguments:
     args = CLI.parse_args()
@@ -47,9 +48,15 @@ if __name__ == '__main__':
                                                                                       group_only = None,
                                                                                       fixed_at_default = None) #['z'])
 
+    # Check if target folder exists:
+    if os.path.isdir(args.out_folder + args.model):
+        pass
+    else:
+        os.mkdir(args.out_folder + args.model)
+
     # Save simulated data
     save_data = {'data': data, 'param_dict': full_parameter_dict}
-    pickle.dump(save_data, open(args.out_folder + \
+    pickle.dump(save_data, open(args.out_folder + args.model + '/' + \
                                 'data_{}_uuid_{}.pickle'.format(str(args.model), model_id), 'wb'))
     
     # Main loop across chains:
@@ -61,20 +68,19 @@ if __name__ == '__main__':
                                   informative = False,
                                   include = hddm.simulators.model_config[args.model]['hddm_include'],
                                   is_group_model = bool(args.is_group_model),
-                                  depends_on = depends_on,
                                   p_outlier = 0.00,
                                   network_type='torch_mlp')
 
         # Sample from model              
         hddm_model_.sample(args.nmcmc, 
                            burn = args.nburn, 
-                           dbname = args.out_folder + \
+                           dbname = args.out_folder + args.model + '/' + \
                                     'db_{}_uuid_{}.db'.format(str(args.model), model_id),
                            db = 'pickle')
         print("\n FINISHED SAMPLING CHAIN " + str(chain))
         
         # Store model
-        hddm_model_.save(args.out_folder + \
+        hddm_model_.save(args.out_folder + args.model + '/' + \
                         'model_{}_uuid_{}.pickle'.format(str(args.model), model_id))
         
         print("\n FINISHED FITTING HDDM MODEL CHAIN " + str(chain))

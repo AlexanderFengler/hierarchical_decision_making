@@ -2,6 +2,7 @@ import hddm
 import argparse
 import uuid
 import pickle
+import os
 
 if __name__ == '__main__':
     CLI = argparse.ArgumentParser()
@@ -79,9 +80,16 @@ if __name__ == '__main__':
                                                                                       group_only_regressors = False,
                                                                                       group_only = None,
                                                                                       fixed_at_default = None) #['z'])
+    
+    # Check if target folder exists
+    if os.path.isdir(args.out_folder + args.model):
+        pass
+    else:
+        os.mkdir(args.out_folder + args.model)
+
 
     save_data = {'data': data, 'param_dict': full_parameter_dict}
-    pickle.dump(save_data, open(args.out_folder + \
+    pickle.dump(save_data, open(args.out_folder + args.model + '/' + \
                                     'data_{}_chong_task_{}_coh_{}_group_{}_uuid_{}.pickle'.format(str(args.model),
                                                                                           str(args.dep_on_task),
                                                                                           str(args.dep_on_coh), 
@@ -104,24 +112,24 @@ if __name__ == '__main__':
         # Sample from model              
         hddm_model_.sample(args.nmcmc, 
                            burn = args.nburn, 
-                           dbname = args.out_folder + \
+                           dbname = args.out_folder + args.model + '/' + \
                                     'db_{}_chong_task_{}_coh_{}_group_{}_chain_{}_uuid_{}.db'.format(str(args.model),
-                                                                                          str(args.dep_on_task),
-                                                                                          str(args.dep_on_coh), 
-                                                                                          str(args.is_group_model),
-                                                                                          str(chain),
-                                                                                          model_id),
+                                                                                                     str(args.dep_on_task),
+                                                                                                     str(args.dep_on_coh), 
+                                                                                                     str(args.is_group_model),
+                                                                                                     str(chain),
+                                                                                                     model_id),
                            db = 'pickle')
         print("\n FINISHED SAMPLING CHAIN " + str(chain))
         
         # Store model
-        hddm_model_.save(args.out_folder + \
+        hddm_model_.save(args.out_folder + args.model + '/' + \
                         'model_{}_chong_task_{}_coh_{}_group_{}_chain_{}_uuid_{}.pickle'.format(str(args.model),
-                                                                                  str(args.dep_on_task),
-                                                                                  str(args.dep_on_coh),
-                                                                                  str(args.is_group_model),
-                                                                                  str(chain),
-                                                                                  model_id))
+                                                                                                str(args.dep_on_task),
+                                                                                                str(args.dep_on_coh),
+                                                                                                str(args.is_group_model),
+                                                                                                str(chain),
+                                                                                                model_id))
         print("\n FINISHED FITTING HDDM MODEL CHAIN " + str(chain))
 
     print("\n FINISHED ALL CHAINS")
