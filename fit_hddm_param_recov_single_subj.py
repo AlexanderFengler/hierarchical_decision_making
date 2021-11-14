@@ -49,6 +49,14 @@ if __name__ == '__main__':
                                                                                       fixed_at_default = None) #['z'])
 
     # Check if target folder exists:
+    # Check in two steps
+    # 1
+    if os.path.isdir(args.out_folder):
+        pass
+    else:
+        os.mkdir(arg.out_folder)
+    
+    # 2
     if os.path.isdir(args.out_folder + args.model):
         pass
     else:
