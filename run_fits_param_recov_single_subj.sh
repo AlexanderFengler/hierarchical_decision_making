@@ -13,13 +13,13 @@ do
 	do
         let counter=counter+1
         echo $counter
-        sbatch sbatch_fit_hddm_param_recov.sh --model $model \
-                                              --n_trials_per_subject \
-                                              --nmcmc $nmcmc \
-                                              --nburn $nburn \
-                                              --nchains $nchains \
-                                              --out_folder $out_folder \
-                                              --param_recov_mode $param_recov_mode \
-                                              --n_param_sets_by_recovery $n_param_sets_by_recovery
+        sbatch sbatch_fit_hddm.sh --model $model \
+                                  --n_trials_per_subject \
+                                  --nmcmc $nmcmc \
+                                  --nburn $nburn \
+                                  --nchains $nchains \
+                                  --out_folder $out_folder \
+                                  --param_recov_mode $param_recov_mode \
+                                  --n_param_sets_by_recovery $n_param_sets_by_recovery
 	done
 done

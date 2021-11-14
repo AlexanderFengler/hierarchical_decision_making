@@ -17,16 +17,16 @@ do
 			do
 				let counter=counter+1
                 echo $counter
-                sbatch sbatch_fit_hddm_param_recov.sh --data_path $data_path \
-                                                      --model $model \
-                                                      --dep_on_task $dep_on_task \
-                                                      --dep_on_coh $dep_on_coh \
-										              --is_group_model $is_group_model \
-                                                      --nmcmc $nmcmc \
-                                                      --nburn $nburn \
-										              --nchains $nchains \ 
-                                                      --param_recov_mode $param_recov_mode \
-                                                      --n_param_sets_by_recovery $n_param_sets_by_recovery
+                sbatch sbatch_fit_hddm.sh --data_path $data_path \
+                                          --model $model \
+                                          --dep_on_task $dep_on_task \
+                                          --dep_on_coh $dep_on_coh \
+										  --is_group_model $is_group_model \
+                                          --nmcmc $nmcmc \
+                                          --nburn $nburn \
+										  --nchains $nchains \ 
+                                          --param_recov_mode $param_recov_mode \
+                                          --n_param_sets_by_recovery $n_param_sets_by_recovery
 			done
 		done
 	done
