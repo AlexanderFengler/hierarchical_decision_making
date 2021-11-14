@@ -4,7 +4,7 @@
 # Default resources are 1 core with 2.8GB of memory per core.
 
 # job name:
-#SBATCH -J model_trainer
+#SBATCH -J chong_data_analysis
 
 # priority
 #SBATCH --account=carney-frankmj-condo
