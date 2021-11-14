@@ -76,9 +76,13 @@ while [ ! $# -eq 0 ]
                 echo "nchains set to: $2"
                 nchains=$2
                 ;;
-            --param_recov_mode |-pr)
+            --param_recov_mode | -pr)
                 echo "param_recov_mode set to: $2"
                 param_recov_mode=$2
+                ;;
+            --n_trials_per_subject | -ntps)
+                echo "number of trials per subject (relevant for param recov in single subject mode) \n set to: $2"
+                n_trials_per_subject=$2
                 ;;
             --n_param_sets_by_recovery | -np)
                 echo "n_param_sets_by_recovery set to: $2"
