@@ -10,15 +10,15 @@
 #SBATCH --account=carney-frankmj-condo
 
 # output file
-#SBATCH --output /users/afengler/batch_job_out/lanfactory_trainer_%A_%a.out
+#SBATCH --output /users/afengler/batch_job_out/chong_data_analysis_%A_%a.out
 
 # Request runtime, memory, cores
 #SBATCH --time=24:00:00
-#SBATCH --mem=32G
-#SBATCH -c 10
+#SBATCH --mem=8G
+#SBATCH -c 12
 #SBATCH -N 1
 #SBATCH -p gpu --gres=gpu:1
-##SBATCH --array=0-8 # should be 89
+#SBATCH --array=0-100 #should be 89
 
 # ----------------------------------------------------------------------------
 
@@ -38,6 +38,7 @@ cd /users/afengler/data/proj_hierarchical_decision_making/hierarchical_decision_
 # PROCESS ARGUMENTS ----------------------------------------------------------
 echo $#
 
+param_recov="False"
 while [ ! $# -eq 0 ]
     do
         case "$1" in
@@ -72,18 +73,57 @@ while [ ! $# -eq 0 ]
             --nchains | -nc)
                 echo "nchains set to: $2"
                 nchains=$2
+                ;;
+            --param_recov |-pr)
+                echo "param_recov set to: $2"
+                param_recov=$2
+                ;;
+            --n_param_sets_by_recovery | -npsr)
+                echo "n_param_sets_by_recovery set to: $2"
+                n_param_sets_by_recovery=$2
         esac
         shift 2
     done
 # ----------------------------------------------------------------------------
 
 # RUN SCRIPT -----------------------------------------------------------------
-python -u fit_hddm.py --data_path $data_path \
-                      --model $model \
-                      --dep_on_task $dep_on_task \
-                      --dep_on_coh $dep_on_coh \
-                      --is_group_model $is_group_model \
-                      --nmcmc $nmcmc \
-                      --nburn $nburn \
-                      --nchains $nchains
+
+
+if [ param_recov == "False" ]
+    then
+        python -u fit_hddm.py --data_path $data_path \
+                              --model $model \
+                              --dep_on_task $dep_on_task \
+                              --dep_on_coh $dep_on_coh \
+                              --is_group_model $is_group_model \
+                              --nmcmc $nmcmc \
+                              --nburn $nburn \
+                              --nchains $nchains
+elif [ param_recov == "single_subject" ]
+    then
+        echo "Running parameter recovery in single subject mode"
+        for ((i=1; i<=$n_param_sets_by_recovery; i++))
+        do
+            python -u fit_hddm_param_recov_single_subj.py --model $model \
+                                                          --n_trials_per_subject $n_trials_per_subject \
+                                                          --nmcmc $nmcmc \
+                                                          --nburn $nburn \
+                                                          --nchains $nchains
+        done
+elif [ param_recov == "chong" ]
+        echo "Running parameter recovery in chong mode"
+        for ((i=1; i<=$n_param_sets_by_recovery; i++))
+        do
+            python -u fit_hddm_param_recov_chong.py --data_path $data_path \
+                                                    --model $model \
+                                                    --dep_on_task $dep_on_task \
+                                                    --dep_on_coh $dep_on_coh \
+                                                    --is_group_model $is_group_model \
+                                                    --nmcmc $nmcmc \
+                                                    --nburn $nburn \
+                                                    --nchains $nchains
+        done
+    then
+fi
+
 #-----------------------------------------------------------------------------

@@ -32,7 +32,7 @@ if __name__ == '__main__':
                     default = 2)
     CLI.add_argument("--out_folder",
                     type = str,
-                    default = "data/hddm_models/")
+                    default = "data/param_recov/chong/")
     
     # Process supplied arguments:
     args = CLI.parse_args()

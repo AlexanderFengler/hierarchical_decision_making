@@ -23,7 +23,7 @@ if __name__ == '__main__':
                     default = 2)
     CLI.add_argument("--out_folder",
                     type = str,
-                    default = "data_param_recov/single_subj/")
+                    default = "data/param_recov/single_subj/")
     
     # Process supplied arguments:
     args = CLI.parse_args()
