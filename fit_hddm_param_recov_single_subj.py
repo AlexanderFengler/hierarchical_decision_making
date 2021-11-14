@@ -83,13 +83,13 @@ if __name__ == '__main__':
         hddm_model_.sample(args.nmcmc, 
                            burn = args.nburn, 
                            dbname = args.out_folder + args.model + '/' + \
-                                    'db_{}_uuid_{}.db'.format(str(args.model), model_id),
+                                    'db_{}_chain_{}_uuid_{}.db'.format(str(args.model), str(chain), model_id),
                            db = 'pickle')
         print("\n FINISHED SAMPLING CHAIN " + str(chain))
         
         # Store model
         hddm_model_.save(args.out_folder + args.model + '/' + \
-                        'model_{}_uuid_{}.pickle'.format(str(args.model), model_id))
+                        'model_{}_chain_{}_uuid_{}.pickle'.format(str(args.model), str(chain), model_id))
         
         print("\n FINISHED FITTING HDDM MODEL CHAIN " + str(chain))
 
