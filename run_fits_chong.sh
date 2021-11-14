@@ -7,11 +7,11 @@ data_path="data/chong_data_hddm_ready.csv"
 #for model in "ddm_par2_no_bias" "ddm_par2_angle_no_bias" "ddm_seq2_no_bias" "ddm_seq2_angle_no_bias" "ddm_mic2_adj_no_bias" "ddm_mic2_adj_angle_no_bias" "ddm_par2_weibull_no_bias" "ddm_seq2_weibull_no_bias" "ddm_mic2_adj_weibull_no_bias"
 for model in "ddm_par2_no_bias" "ddm_seq2_no_bias" "ddm_mic2_adj_no_bias" "ddm_par2_angle_no_bias" "ddm_seq2_angle_no_bias" "ddm_mic2_adj_angle_no_bias"  #ddm_mic2_adj_weibull_no_bias" "ddm_mic2_adj_no_bias"
 do
-	for dep_on_task in 0 1
+	for dep_on_task in 1
 	do
-		for dep_on_coh in 0 1
+		for dep_on_coh in 1
 		do
-			for is_group_model in 0 1
+			for is_group_model in 1
 			do
 				let counter=counter+1
                 echo $counter
@@ -22,7 +22,7 @@ do
 										  --is_group_model $is_group_model \
                                           --nmcmc $nmcmc \
                                           --nburn $nburn \
-										  --nchains $nchains
+										  --nchains $nchains \
 			done
 		done
 	done

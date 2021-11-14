@@ -69,6 +69,11 @@ if __name__ == '__main__':
     # Generate simulated data:
     # Simulate DATA
 
+    if args.is_group_model:
+        group_only = None
+    else:
+        group_only = hddm.model_config.model_config[args.model]
+
     # AF-TODO: Set group_only argument in case we do not want to fit a model that has is_group = True
     data, full_parameter_dict = hddm.simulators.hddm_dataset_generators.simulator_h_c(data = chong_data.copy(),
                                                                                       model = args.model,
@@ -78,7 +83,7 @@ if __name__ == '__main__':
                                                                                       regression_models = None,
                                                                                       regression_covariates = None,
                                                                                       group_only_regressors = False,
-                                                                                      group_only = None,
+                                                                                      group_only = group_only,
                                                                                       fixed_at_default = None) #['z'])
     
     # Check if target folder exists
