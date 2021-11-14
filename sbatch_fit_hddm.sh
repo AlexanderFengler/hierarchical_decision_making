@@ -114,6 +114,7 @@ elif [ param_recov == "single_subject" ]
                                                           --nchains $nchains
         done
 elif [ param_recov == "chong" ]
+    then
         echo "Running parameter recovery in chong mode"
         for ((i=1; i<=$n_param_sets_by_recovery; i++))
         do
@@ -126,7 +127,6 @@ elif [ param_recov == "chong" ]
                                                     --nburn $nburn \
                                                     --nchains $nchains
         done
-    then
 fi
 
 #-----------------------------------------------------------------------------
