@@ -14,7 +14,7 @@ do
         let counter=counter+1
         echo $counter
         sbatch sbatch_fit_hddm.sh --model $model \
-                                  --n_trials_per_subject \
+                                  --n_trials_per_subject $n_trials_per_subject \
                                   --nmcmc $nmcmc \
                                   --nburn $nburn \
                                   --nchains $nchains \
