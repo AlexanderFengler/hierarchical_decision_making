@@ -77,10 +77,10 @@ while [ ! $# -eq 0 ]
                 nchains=$2
                 ;;
             --param_recov_mode |-pr)
-                echo "param_recov set to: $2"
+                echo "param_recov_mode set to: $2"
                 param_recov_mode=$2
                 ;;
-            --n_param_sets_by_recovery | -npsr)
+            --n_param_sets_by_recovery | -np)
                 echo "n_param_sets_by_recovery set to: $2"
                 n_param_sets_by_recovery=$2
         esac
