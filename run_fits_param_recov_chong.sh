@@ -24,7 +24,7 @@ do
 										  --is_group_model $is_group_model \
                                           --nmcmc $nmcmc \
                                           --nburn $nburn \
-										  --nchains $nchains \ 
+										  --nchains $nchains \
                                           --param_recov_mode $param_recov_mode \
                                           --n_param_sets_by_recovery $n_param_sets_by_recovery
 			done
