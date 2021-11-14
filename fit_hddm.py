@@ -85,7 +85,7 @@ if __name__ == '__main__':
                                                                                           str(args.dep_on_task),
                                                                                           str(args.dep_on_coh), 
                                                                                           str(args.is_group_model),
-                                                                                          str(chain))
+                                                                                          str(chain)),
                            db = 'pickle')
         print("\n FINISHED SAMPLING CHAIN " + str(chain))
         
@@ -95,7 +95,7 @@ if __name__ == '__main__':
                                                                                   str(args.dep_on_task),
                                                                                   str(args.dep_on_coh),
                                                                                   str(args.is_group_model),
-                                                                                  str(chain))
+                                                                                  str(chain)))
         print("\n FINISHED FITTING HDDM MODEL CHAIN " + str(chain))
 
     print("\n FINISHED ALL CHAINS")

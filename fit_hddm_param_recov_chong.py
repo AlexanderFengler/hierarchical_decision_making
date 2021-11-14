@@ -72,7 +72,7 @@ if __name__ == '__main__':
     if args.is_group_model:
         group_only = None
     else:
-        group_only = hddm.model_config.model_config[args.model]
+        group_only = hddm.model_config.model_config[args.model]["params"]
 
     # AF-TODO: Set group_only argument in case we do not want to fit a model that has is_group = True
     data, full_parameter_dict = hddm.simulators.hddm_dataset_generators.simulator_h_c(data = chong_data.copy(),
