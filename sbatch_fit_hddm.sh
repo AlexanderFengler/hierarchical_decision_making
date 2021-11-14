@@ -18,7 +18,7 @@
 #SBATCH -c 12
 #SBATCH -N 1
 #SBATCH -p gpu --gres=gpu:1
-#SBATCH --array=0-100 #should be 89
+#SBATCH --array=0-2 #should be 89
 
 # ----------------------------------------------------------------------------
 
