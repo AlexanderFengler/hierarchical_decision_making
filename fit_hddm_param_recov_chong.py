@@ -60,7 +60,7 @@ if __name__ == '__main__':
     
     # In case no dependencies specified --> set to None
     if len(depends_on['vh'])==0:
-        depends_on = None
+        depends_on = {}
     # --------------------------------------------------------------------
 
     # Main loop across chains:
