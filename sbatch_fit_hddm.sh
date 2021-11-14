@@ -78,7 +78,7 @@ while [ ! $# -eq 0 ]
                 ;;
             --param_recov_mode |-pr)
                 echo "param_recov set to: $2"
-                param_recov=$2
+                param_recov_mode=$2
                 ;;
             --n_param_sets_by_recovery | -npsr)
                 echo "n_param_sets_by_recovery set to: $2"
