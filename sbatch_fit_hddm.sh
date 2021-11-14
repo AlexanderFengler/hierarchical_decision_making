@@ -36,6 +36,8 @@ cd /users/afengler/data/proj_hierarchical_decision_making/hierarchical_decision_
 # ----------------------------------------------------------------------------
 
 # PROCESS ARGUMENTS ----------------------------------------------------------
+echo "Starting script"
+echo "Printing arguments"
 echo $#
 
 param_recov="False"
@@ -91,6 +93,7 @@ while [ ! $# -eq 0 ]
 
 if [ param_recov == "False" ]
     then
+        echo "Running chong data analysis"
         python -u fit_hddm.py --data_path $data_path \
                               --model $model \
                               --dep_on_task $dep_on_task \
