@@ -54,7 +54,7 @@ if __name__ == '__main__':
     if os.path.isdir(args.out_folder):
         pass
     else:
-        os.mkdir(arg.out_folder)
+        os.mkdir(args.out_folder)
     
     # 2
     if os.path.isdir(args.out_folder + args.model):
