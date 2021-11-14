@@ -40,7 +40,7 @@ echo "Starting script"
 echo "Printing arguments"
 echo $#
 
-param_recov="False"
+param_recov_mode="False"
 while [ ! $# -eq 0 ]
     do
         case "$1" in
