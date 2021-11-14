@@ -75,7 +75,7 @@ if __name__ == '__main__':
                                   model = args.model,
                                   informative = False,
                                   include = hddm.simulators.model_config[args.model]['hddm_include'],
-                                  is_group_model = bool(args.is_group_model),
+                                  is_group_model = False,
                                   p_outlier = 0.00,
                                   network_type='torch_mlp')
 
