@@ -2,6 +2,7 @@ import numpy as np
 import scipy as scp
 import pandas as pd
 import matplotlib.pyplot as plt
+import pickle
 #import hddm
 
 
@@ -193,31 +194,39 @@ def all_plots(chong_data):
   plt.xlabel('Response Probability',fontsize=14)
   plt.ylabel('Reaction Time (seconds)',fontsize=14)
 
-
-def clean_post_pred(model,nsamples,factors):
-  if factors == "all":
-    post_pred = hddm.utils.post_pred_gen(model, samples = nsamples, groupby = ['subj_idx','lowDim','irrDim','highDim','lowDimCoh','highDimCoh','irrDimCoh'])
-    highDim = np.zeros(post_pred.shape[0],dtype=np.int)
-    lowDim = np.zeros(post_pred.shape[0],dtype=np.int)
-    irrDim = np.zeros(post_pred.shape[0],dtype=np.int)
-    highDimCoh = np.zeros(post_pred.shape[0],dtype=np.int)
-    lowDimCoh = np.zeros(post_pred.shape[0],dtype=np.int)
-    irrDimCoh = np.zeros(post_pred.shape[0],dtype=np.int)
-    subj_idx = np.zeros(post_pred.shape[0],dtype=np.int)
+def clean_post_pred(post_pred,groupby):
+  if len(groupby) > 0:
+    dct = {i:[] for i in groupby}
+    is_group = 'subj_idx' in groupby
+    if is_group:
+      loop_len = len(groupby) - 1
+    else:
+      loop_len = len(groupby)
     for i in range(post_pred.shape[0]):
-      highDim[i] = int(post_pred.index[i][0][5])
-      highDimCoh[i] = int(post_pred.index[i][0][7])
-      irrDim[i] = int(post_pred.index[i][0][9])
-      irrDimCoh[i] = int(post_pred.index[i][0][11])
-      lowDim[i] = int(post_pred.index[i][0][13])
-      lowDimCoh[i] = int(post_pred.index[i][0][15])
+      for j in range(loop_len):
+        dct[groupby[j]].append(int(post_pred.index[i][0][5+j*2]))
+
       if i%500000 == 0:
         print(i)
-      if len(post_pred.index[i][0]) == 19:
-        subj_idx[i] = int(post_pred.index[i][0][18])
-      else:
-        subj_idx[i] = int(post_pred.index[i][0][18:20])
 
+  # currently cannot support over 100 subjects
+      if groupby:
+        if post_pred.index[i][0][-2] == '.':
+          dct[groupby[-1]].append(int(post_pred.index[i][0][-1]))
+        else:
+          dct[groupby[-1]].append(int(post_pred.index[i][0][-2:]))
+
+    df = pd.DataFrame(dct)
+    df['rt'] = post_pred['rt'].tolist()
+    df['response'] = post_pred['response'].tolist()
+    
+  else:
+    df = post_pred
+
+  df['isLowCorrect'] = ((post_pred.response == 1) |  (post_pred.response == 3)).astype(np.int)
+  df['isHighCorrect'] = ((post_pred.response == 2) | (post_pred.response == 3)).astype(np.int)
+
+  return df
 
 def load_data(model):
   l = []

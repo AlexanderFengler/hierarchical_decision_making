@@ -7,6 +7,6 @@ Code concerning the data analysis project on a hierarchical decision making task
 
 ### 2. To recover parameters on synthetic data, change param_recov_mode to synthetic and execute the file
 
-### 3. To generate posterior predictives, Execute the bash file, ...
+### 3. To generate posterior predictives, Execute the bash file, sbatch_generate_posterior_predictives.sh
 
 ### 4. To generate plots for the postior predictives, execute ...
