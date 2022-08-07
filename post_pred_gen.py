@@ -6,8 +6,6 @@ import pandas as pd
 import os
 import numpy as np
 
-from helper_functions import clean_post_pred, clean_post_pred_2
-
 if __name__ == '__main__':
     CLI = argparse.ArgumentParser()
     CLI.add_argument("--model",
@@ -69,26 +67,18 @@ if __name__ == '__main__':
         groupby.append('subj_idx')
 
     if groupby != []:
-        post_pred = hddm.utils.post_pred_gen(fitted_model, samples = args.nsamples, groupby = groupby)
+        post_pred = hddm.utils.post_pred_gen(fitted_model, samples = args.nsamples, groupby = groupby, append_data = True)
     else:
-        post_pred = hddm.utils.post_pred_gen(fitted_model, samples = args.nsamples)
+        post_pred = hddm.utils.post_pred_gen(fitted_model, samples = args.nsamples, append_data = True)
 
-    # find original data to pass its metadata to the posterior predictive
 
-    ## Change this to use the data in the fitted model ##
+    # overwrite original reaction-time and response data with sampled reaction-time and response
 
-    orig_data = fitted_model.data
+    post_pred['rt'] = post_pred['rt_sampled']
+    post_pred['response'] = post_pred['response_sampled']
 
-    #for file in os.listdir("data"):
-    #    if args.data in file:
-    #        orig_data = pd.read_csv("data/{}".format(file))
 
-    #post_pred = clean_post_pred(post_pred, groupby)
-    try:
-        #clean_post_pred_2(post_pred, orig_data, args.nsamples)
-        post_pred = clean_post_pred(post_pred, groupby)
-    except:
-        print("No CSV file containing '{}' in its name exists in the data folder".format(args.data))
+    # save posterior predictive
 
     try:
         post_pred.to_pickle(args.out_folder + args.model + '/' + model_file_name)

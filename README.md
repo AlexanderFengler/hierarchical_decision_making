@@ -20,9 +20,4 @@ In this repo, you will find the following:
 6) "sbatch_generate_posterior_predictives.sh" Runs post_pred_gen.py on slurm.
 
 
-# Maybe fix on HDDM side:
-### When sampling, please use the conditions in the exact same place/order as the original data
-
-### can we remove the UUIDs?
-
-### can we remove fit_hddm.py?
+### add examples to readme

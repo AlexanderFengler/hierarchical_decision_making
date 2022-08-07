@@ -41,43 +41,6 @@ def rate_by_quantile(data,response,nquants):
           out[i,j] = np.mean(qd[j].response==response)
   return np.mean(out,axis=0)
 
-def clean_post_pred(post_pred,groupby):
-  """Adds the metadata relevent to fitting the model to the posterior predictive data."""
-  if len(groupby) > 0:
-    dct = {i:[] for i in groupby}
-    is_group = 'subj_idx' in groupby
-    if is_group:
-      loop_len = len(groupby) - 1
-    else:
-      loop_len = len(groupby)
-    for i in range(post_pred.shape[0]):
-      for j in range(loop_len):
-        dct[groupby[j]].append(int(post_pred.index[i][0][5+j*2]))
-
-      if i%500000 == 0:
-        print(i)
-
-      # currently cannot support over 100 subjects
-      if groupby:
-        if post_pred.index[i][0][-2] == '.':
-          dct[groupby[-1]].append(int(post_pred.index[i][0][-1]))
-        else:
-          dct[groupby[-1]].append(int(post_pred.index[i][0][-2:]))
-    #for key in dct.keys():
-    #  print("{}: {}".format(key,len(dct[key])))
-
-    df = pd.DataFrame(dct)
-    df['rt'] = post_pred['rt'].tolist()
-    df['response'] = post_pred['response'].tolist()
-    
-  else:
-    df = post_pred
-  df['cond2'] = df["highDimCoh"]*10 + df["lowDimCoh"] 
-  #df['isLowCorrect'] = ((post_pred.response == 1) |  (post_pred.response == 3)).astype(np.int)
-  #df['isHighCorrect'] = ((post_pred.response == 2) | (post_pred.response == 3)).astype(np.int)
-
-  return df
-
 def load_posterior_predictive(model, task = 0, coherence = 0, group = 0):
   """Loads the posterior predictive of a model with the specified paramters"""
   files = os.listdir("data/posterior_predictives/{}".format(model))
@@ -90,13 +53,6 @@ def load_posterior_predictive(model, task = 0, coherence = 0, group = 0):
     print("model with these arguments does not exist")
   else:
     return data
-
-def clean_post_pred_2(post_pred,observed_data,nsamples):
-  """Adds the metadata relevent to fitting the model to the posterior predictive data."""
-  for col in observed_data.columns:
-    if (col != "rt") and (col != "response"):
-      post_pred[col] = np.repeat(observed_data[col],nsamples).to_numpy()
-
 
 
 ### Plotting functions ###
