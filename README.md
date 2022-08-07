@@ -1,12 +1,28 @@
 # hierarchical_decision_making
-Code concerning the data analysis project on a hierarchical decision making task
+This is the repo for utilizing HDDMnn to fit models of hierarchical decision-making to reaction-time data.
+
+The purpose of this repo is to provide a pipeline for generating data and plots for models of behavior on hierarchical decision-making tasks. Using HDDM, we can fit drift-diffusion models to reaction-time data. Since we are specifically concerned with models of hierarchical decision-making, we use HDDMnn to approximate the likelihood function of hierarchical decision-making models for model-fitting.
+
+As of 8/6/2022, HDDMnn only supports 3 models of hierarchical decision-making. These are "ddm_seq2_no_bias", "ddm_par2_no_bias", and "ddm_mic2_adj_no_bias". They can be fit to decision-making data with 4 possible choices.
+
+In this repo, you will find the following:
+
+1) "fit_hddm_param_recov.py" This script executes MCMC sampling using the specified model and data. It generates a pickled model and database file.
+
+2) "post_pred_gen.py" This script generates posterior predictive data from a specified model that has already been fit.
+
+3) "create_plot_bank.ipynb" Provides basic code to load in posterior predictive data and produce a plot bank.
+
+4) "helper_functions.py" Holds functions used in the code.
+
+5) "sbatch_fit_hddm.sh" Runs fit_hddm_param_recov.py on slurm.
+
+6) "sbatch_generate_posterior_predictives.sh" Runs post_pred_gen.py on slurm.
 
 
-## Producing data from study
-### 1. To fit the models to the observed data, execute the bash file, run_fits_param_recov.sh
+# Maybe fix on HDDM side:
+### When sampling, please use the conditions in the exact same place/order as the original data
 
-### 2. To recover parameters on synthetic data, change param_recov_mode to synthetic and execute the file
+### can we remove the UUIDs?
 
-### 3. To generate posterior predictives, Execute the bash file, sbatch_generate_posterior_predictives.sh
-
-### 4. To generate plots for the postior predictives, execute ...
+### can we remove fit_hddm.py?

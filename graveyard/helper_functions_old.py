@@ -1,12 +1,14 @@
 import numpy as np
+import scipy as scp
 import pandas as pd
 import matplotlib.pyplot as plt
+import pickle
 import os
+#import hddm
 
+
+## function that splits data into quantiles
 def quantile_list(data,nquantiles):
-  """Function that finds the value of n quantiles in an array. \n
-  data: 1-D array \n
-  nquantiles: number of quantiles to return"""
   quantiles_list = []
   for i in range(nquantiles):
     q = i/nquantiles
@@ -15,10 +17,12 @@ def quantile_list(data,nquantiles):
     quantiles_list.append(np.quantile(data,q))
   return np.array(quantiles_list)
 
+
+def error_bars(err,length):
+  return 2*np.sqrt(err*(1 - err) / length)
+
 def quantile_data(data,nquantiles):
-    """Function that returns a list of the data split into quantiles. \n
-  data: 1-D array \n
-  nquantiles: number of quantiles to split the data into"""
+    #step = 1/nquantiles
     data_list = []
     l = np.linspace(0,1,nquantiles+1)
     l = np.quantile(data.rt,l)
@@ -27,90 +31,50 @@ def quantile_data(data,nquantiles):
         data_list.append(data[(data.rt>=l[i])*(data.rt<l[i+1])])
     return data_list
 
+
+def retrieve_hddm_model(model,bySubj=True,byTask=True,byCoh=True):
+  m = hddm.load('data/tsumme/hddm_out/{}_chong_task_{}_coh_{}_group_{}_model'.format(model,byTask,byCoh,bySubj))
+  return m
+
+
+def retrieve_synth_model(model,bySubj=True,byTask=True,byCoh=True):
+  m = hddm.load('data/tsumme/hddm_out/{}_chong_task_{}_coh_{}_group_{}_model'.format(model,byTask,byCoh,bySubj))
+  return m
+
+
 def rate_by_quantile(data,response,nquants):
-  """Returns the rate of occurence for a certain response within each n quantile(s) \n
-  data: dataframe of hddm-ready data \n
-  response: The specifc response to provide the rate of occurence for \n
-  nquants: number of quantiles to return rate for"""
-  subs = np.unique(data.subj_idx)
-  out = np.zeros((len(subs),nquants))
-  for i in range(len(subs)):
-      d = data[data.subj_idx==subs[i]]
-      qd = quantile_data(d,nquants)
-      for j in range(nquants):
-          out[i,j] = np.mean(qd[j].response==response)
-  return np.mean(out,axis=0)
+    subs = np.unique(data.subj_idx)
+    out = np.zeros((len(subs),nquants))
+    for i in range(len(subs)):
+        d = data[data.subj_idx==subs[i]]
+        qd = quantile_data(d,nquants)
+        for j in range(nquants):
+            out[i,j] = np.mean(qd[j].response==response)
+    return np.mean(out,axis=0)
 
-def clean_post_pred(post_pred,groupby):
-  """Adds the metadata relevent to fitting the model to the posterior predictive data."""
-  if len(groupby) > 0:
-    dct = {i:[] for i in groupby}
-    is_group = 'subj_idx' in groupby
-    if is_group:
-      loop_len = len(groupby) - 1
-    else:
-      loop_len = len(groupby)
-    for i in range(post_pred.shape[0]):
-      for j in range(loop_len):
-        dct[groupby[j]].append(int(post_pred.index[i][0][5+j*2]))
-
-      if i%500000 == 0:
-        print(i)
-
-      # currently cannot support over 100 subjects
-      if groupby:
-        if post_pred.index[i][0][-2] == '.':
-          dct[groupby[-1]].append(int(post_pred.index[i][0][-1]))
-        else:
-          dct[groupby[-1]].append(int(post_pred.index[i][0][-2:]))
-    #for key in dct.keys():
-    #  print("{}: {}".format(key,len(dct[key])))
-
-    df = pd.DataFrame(dct)
-    df['rt'] = post_pred['rt'].tolist()
-    df['response'] = post_pred['response'].tolist()
-    
-  else:
-    df = post_pred
-  df['cond2'] = df["highDimCoh"]*10 + df["lowDimCoh"] 
-  #df['isLowCorrect'] = ((post_pred.response == 1) |  (post_pred.response == 3)).astype(np.int)
-  #df['isHighCorrect'] = ((post_pred.response == 2) | (post_pred.response == 3)).astype(np.int)
-
-  return df
-
-def load_posterior_predictive(model, task = 0, coherence = 0, group = 0):
-  """Loads the posterior predictive of a model with the specified paramters"""
-  files = os.listdir("data/posterior_predictives/{}".format(model))
-  isempty = True
-  for file in files:
-    if (model in file) and ("task_{}".format(task) in file) and ("coh_{}".format(coherence) in file) and ("group_{}".format(group) in file):
-      data = pd.read_pickle("data/posterior_predictives/{}/{}".format(model,file))
-      isempty = False
-  if isempty:
-    print("model with these arguments does not exist")
-  else:
-    return data
-
-def clean_post_pred_2(post_pred,observed_data,nsamples):
-  """Adds the metadata relevent to fitting the model to the posterior predictive data."""
-  for col in observed_data.columns:
-    if (col != "rt") and (col != "response"):
-      post_pred[col] = np.repeat(observed_data[col],nsamples).to_numpy()
+def err_plots(data,nquants):
+    conds = np.unique(data.cond2)
+    for i in range(len(conds)):
+        d = data[data.cond2==conds[i]]
+        # high dim
+        plt.subplot(2,2,4-i)
+        plt.plot(rate_by_quantile(d,1,nquants) + rate_by_quantile(d,0,nquants),'-o')
 
 
+        #low dim
+        plt.plot(rate_by_quantile(d,2,nquants) + rate_by_quantile(d,0,nquants),'-o')
+        
+        plt.title(conds[i])
 
-### Plotting functions ###
+        plt.ylim((0,0.28))
+
 
 def err_plot(data,nquants):
-  """Plots the rate of high and low dimension errors in each quantile"""
   plt.plot(rate_by_quantile(data,1,nquants) + rate_by_quantile(data,0,nquants),'-o')
   plt.plot(rate_by_quantile(data,2,nquants) + rate_by_quantile(data,0,nquants),'-o')
   plt.ylim((0,0.3))
 
 def single_qpp(data_table, nquants, coh_level='highDim'):
-  """Plots a single quantile probability plot. If coherence level is 'highDim', 
-  then errors in the high dimension are used for the error rates. Otherwise, low dimension 
-  errors are used."""
   if coh_level == 'highDim':
     for i in [1,2]:
         data = data_table[data_table.highDimCoh == i]
@@ -131,7 +95,7 @@ def single_qpp(data_table, nquants, coh_level='highDim'):
 
 
 def single_coh_hist(data,nquants):
-  """Plots a histogram of the data and idenifies n quantiles in the plot."""
+  #plt.hist(data.rt,bins=100,density=True,range=(0,10))
   plt.hist(data.rt,bins=50,density=True,range=(0,5))
 
   q_list = quantile_list(data.rt,nquants)
@@ -145,8 +109,21 @@ def single_coh_hist(data,nquants):
     #locs.append()
     plt.text(np.mean([lines[i],lines[i+1]])-0.1,0.95,'{}'.format(i+1))
 
+def median_rt_by_coh_plot(data):
+  x_plot = np.flip(np.unique(data.cond2))
+  y_plot = [np.median(data.rt[data.cond2==i]) for i in x_plot]
+
+  #plt.scatter([str(i) for i in x_plot],y_plot)
+  plt.scatter(['HH','HL','LH','LL'],y_plot)
+
+  plt.hlines(np.mean(y_plot[1:3]),xmin=0,xmax=3,linestyles='dashed')
+  plt.hlines(y_plot[0],xmin=0,xmax=3,linestyles='dashed')
+  plt.hlines(y_plot[3],xmin=0,xmax=3,linestyles='dashed')
+
+
 def all_plots(chong_data):
-  """Function that plots all plots relevant to chong data study"""
+  #plt.suptitle('chong_data plots')
+
   plt.subplot(2,5,1)
   single_coh_hist(chong_data[chong_data['cond2']==11],5)
   plt.title('Reaction Time Quantiles \n by Coherence: LL',fontsize=18)
@@ -217,3 +194,68 @@ def all_plots(chong_data):
   plt.legend(['Low coherence,\n incorrect','Low coherence,\n correct','High coherence,\n incorrect','High coherence,\n correct'])
   plt.xlabel('Response Probability',fontsize=14)
   plt.ylabel('Reaction Time (seconds)',fontsize=14)
+
+def clean_post_pred(post_pred,groupby):
+  if len(groupby) > 0:
+    dct = {i:[] for i in groupby}
+    is_group = 'subj_idx' in groupby
+    if is_group:
+      loop_len = len(groupby) - 1
+    else:
+      loop_len = len(groupby)
+    for i in range(post_pred.shape[0]):
+      for j in range(loop_len):
+        dct[groupby[j]].append(int(post_pred.index[i][0][5+j*2]))
+
+      if i%500000 == 0:
+        print(i)
+
+      # currently cannot support over 100 subjects
+      if groupby:
+        if post_pred.index[i][0][-2] == '.':
+          dct[groupby[-1]].append(int(post_pred.index[i][0][-1]))
+        else:
+          dct[groupby[-1]].append(int(post_pred.index[i][0][-2:]))
+    for key in dct.keys():
+      print("{}: {}".format(key,len(dct[key])))
+
+    df = pd.DataFrame(dct)
+    df['rt'] = post_pred['rt'].tolist()
+    df['response'] = post_pred['response'].tolist()
+    
+  else:
+    df = post_pred
+  df['cond2'] = df["highDimCoh"]*10 + df["lowDimCoh"] 
+  #df['isLowCorrect'] = ((post_pred.response == 1) |  (post_pred.response == 3)).astype(np.int)
+  #df['isHighCorrect'] = ((post_pred.response == 2) | (post_pred.response == 3)).astype(np.int)
+
+  return df
+
+def load_data(model):
+  l = []
+  files = os.listdir('data/tsumme/synthetic_test')
+  for f in files:
+    if model in f:
+      file_to_read = open('data/tsumme/synthetic_test/{}'.format(f), "rb")
+      loaded_dictionary = pickle.load(file_to_read)
+      
+      df = pd.DataFrame.from_dict(loaded_dictionary)
+      l.append(df)
+  return pd.concat(l)
+
+def load_posterior_predictive(model, task = 0, coherence = 0, group = 0):
+  files = os.listdir("data/posterior_predictives/{}".format(model))
+  isempty = True
+  for file in files:
+    if (model in file) and ("task_{}".format(task) in file) and ("coh_{}".format(coherence) in file) and ("group_{}".format(group) in file):
+      data = pd.read_pickle("data/posterior_predictives/{}/{}".format(model,file))
+      isempty = False
+  if isempty:
+    print("model with these arguments does not exist")
+  else:
+    return data
+
+def clean_post_pred_2(post_pred,observed_data,nsamples):
+  for col in observed_data.columns:
+    if (col != "rt") and (col != "response"):
+      post_pred[col] = np.repeat(observed_data[col],nsamples).to_numpy()
